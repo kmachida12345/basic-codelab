@@ -4,8 +4,8 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -48,19 +48,20 @@ fun Greeting(name: String) {
 @Composable
 fun CardContent(name: String) {
     var expanded by remember { mutableStateOf(false) }
-    val extraPadding by animateDpAsState(
-        if (expanded) 48.dp else 0.dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        )
-    )
 
-    Row(modifier = Modifier.padding(24.dp)) {
+    Row(
+        modifier = Modifier
+            .padding(24.dp)
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            )
+    ) {
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(bottom = extraPadding.coerceAtLeast(0.dp))
         ) {
             Text(text = "Hello, ")
             Text(
@@ -68,6 +69,13 @@ fun CardContent(name: String) {
                     fontWeight = FontWeight.ExtraBold
                 )
             )
+            if (expanded) {
+            Text(
+                text = ("Composem ipsum color sit lazy, " +
+                        "padding theme elit, sed do bouncy. ").repeat(4),
+            )
+        }
+
         }
         IconButton(onClick = { expanded = !expanded }) {
             Icon(
